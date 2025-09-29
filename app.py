@@ -3,14 +3,25 @@ import pandas as pd
 import streamlit as st
 import csv
 import os
+from google.oauth2.service_account import Credentials
+import gspread 
 
+# %%
 
-botao_csv = st.button("Criar tabela")
-if botao_csv:
-    if not os.path.exists("Estoque.csv"):
-        with open("Estoque.csv", 'w', newline="", encoding='utf-8') as arquivo_csv:
-            escritor = csv.writer(arquivo_csv)     
-    dados = []   
+SCOPE = [
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive'
+]
+
+creds = Credentials.from_service_account_file("./keys/credenciais.json", scopes=SCOPE)
+
+cliente_gs = gspread.authorize(creds)
+
+nome_panilha = "app-estoque"
+
+panilha = cliente_gs.open(nome_panilha)
+
+aba_estoque = panilha.worksheet("estoque")
 
 
 # %%
@@ -25,8 +36,6 @@ origens = {"Cras1": 1, "Cras2": 2}
 destinos = {"Cras1": 1, "Cras2": 2}
 
 
-
-
 item_input = st.selectbox(label="Selecione o item", options=itens.keys())
 
 quantidade_input = st.number_input(label="Digite a quantidade", min_value=0)
@@ -38,16 +47,17 @@ botao_estoque = st.button(label="Adicionar")
 
 
 
-
-
 if botao_estoque:
     if quantidade_input == 0:
         st.markdown("Quantidade inválida")
     else:
         data = pd.to_datetime("now")
-        nova_transacao = {"data": data, "item": item_input, "quantidade": quantidade_input,"Origem": origem_input, "Destino": destino_input, "obs": obs}
+        data_formatada = pd.to_datetime('now').strftime('%Y-%m-%d %H:%M:%S')
+        nova_transacao = {"data": data_formatada, "item": item_input, "quantidade": quantidade_input,"Origem": origem_input, "Destino": destino_input, "obs": obs}
         st.session_state.dados.append(nova_transacao)
         print(st.session_state.dados)
+        nova_lina = list(nova_transacao.values())
+        aba_estoque.append_row(nova_lina)
         
 if st.session_state.dados:
     st.subheader("Dados Atuais")
