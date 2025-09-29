@@ -49,7 +49,9 @@ botao_estoque = st.button(label="Adicionar")
 
 if botao_estoque:
     if quantidade_input == 0:
-        st.markdown("Quantidade inválida")
+        st.markdown("Quantidade inválida!")
+    elif origem_input == destino_input:
+        st.markdown("Origem e destino são o mesmo, verifique os dados!")
     else:
         data = pd.to_datetime("now")
         data_formatada = pd.to_datetime('now').strftime('%Y-%m-%d %H:%M:%S')
