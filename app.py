@@ -39,15 +39,19 @@ botao_estoque = st.button(label="Adicionar")
 
 
 
+
 if botao_estoque:
-    
-    data = pd.to_datetime("now")
-    nova_transacao = {"data": data, "item": item_input, "quantidade": quantidade_input,"Origem": origem_input, "Destino": destino_input, "obs": obs}
-    st.session_state.dados.append(nova_transacao)
-    print(st.session_state.dados)
-    
-    
-    
+    if quantidade_input == 0:
+        st.markdown("Quantidade inválida")
+    else:
+        data = pd.to_datetime("now")
+        nova_transacao = {"data": data, "item": item_input, "quantidade": quantidade_input,"Origem": origem_input, "Destino": destino_input, "obs": obs}
+        st.session_state.dados.append(nova_transacao)
+        print(st.session_state.dados)
+        
 if st.session_state.dados:
     st.subheader("Dados Atuais")
     st.dataframe(pd.DataFrame(st.session_state.dados))
+    
+    
+    
