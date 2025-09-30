@@ -4,25 +4,33 @@ import streamlit as st
 import csv
 import os
 from google.oauth2.service_account import Credentials
-import gspread 
+import gspread
 
 # %%
 
-SCOPE = [
-    'https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive'
-]
+@st.cache_resource()
+def get_gspread_client():
+    SCOPE = [
+        'https://www.googleapis.com/auth/spreadsheets',
+        'https://www.googleapis.com/auth/drive'
+    ]
 
-creds = Credentials.from_service_account_file("./keys/credenciais.json", scopes=SCOPE)
+    creds = Credentials.from_service_account_file("./keys/credenciais.json", scopes=SCOPE)
 
-cliente_gs = gspread.authorize(creds)
+    cliente_gs = gspread.authorize(creds)
+    return cliente_gs
+    
+@st.cache_resource()
+def get_sheet(cliente):
+    nome_panilha = "app-estoque"
 
-nome_panilha = "app-estoque"
+    panilha = cliente.open(nome_panilha)
 
-panilha = cliente_gs.open(nome_panilha)
+    aba_estoque = panilha.worksheet("estoque")
+    return aba_estoque
 
-aba_estoque = panilha.worksheet("estoque")
-
+cliente = get_gspread_client()
+aba_estoque = get_sheet(cliente)
 
 # %%
 if not "dados" in st.session_state:
