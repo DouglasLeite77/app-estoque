@@ -5,6 +5,7 @@ import csv
 import os
 from google.oauth2.service_account import Credentials
 import gspread
+import sqlite3
 
 # %%
 
@@ -21,16 +22,60 @@ def get_gspread_client():
     return cliente_gs
     
 @st.cache_resource()
-def get_sheet(cliente):
+def get_sheet(_c, esc):
     nome_panilha = "app-estoque"
 
-    panilha = cliente.open(nome_panilha)
+    panilha = _c.open(nome_panilha)
 
-    aba_estoque = panilha.worksheet("estoque")
-    return aba_estoque
+    aba = panilha.worksheet(esc)
+    return aba
 
 cliente = get_gspread_client()
-aba_estoque = get_sheet(cliente)
+aba_saidas = get_sheet(cliente, "Saídas")
+aba_entradas = get_sheet(cliente, "Entradas")
+
+# %%
+# ------------------------------------------------- BANCO DE DADOS ----------------------------------------------------------------- 
+@st.cache_resource
+def conexao_bd():
+    con = sqlite3.connect('estoque.bd', check_same_thread=False)
+    
+    con.execute('''
+                CREATE TABLE IF NOT EXISTS itens_bd(
+                    id INTEGER PRIMARY KEY,
+                    nome_item TEXT UNIQUE NOT NULL
+                    )
+            ''')
+
+    con.commit()
+    return con
+
+con = conexao_bd()
+
+
+# ------------------------------------------------------------------------------------------------------------------
+
+# %%
+
+itens = {"Arroz": 0, "Feijão": 0, "Açúcar": 0, "Café": 0}
+origens = {"Cras1": 1, "Cras2": 2}
+destinos = {"Cras1": 1, "Cras2": 2}
+
+
+def get_lista_itens(conn):
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT nome_item FROM itens_bd ORDER BY nome_item")
+    lista = [row[0] for row in cursor.fetchall()]
+    return lista
+
+lista_itens = get_lista_itens(con)
+
+
+print(lista_itens)
+
+
+
 
 # %%
 if not "dados" in st.session_state:
@@ -39,35 +84,48 @@ if not "dados" in st.session_state:
 
 st.title("Gerenciamento de estoque")
 
-itens = {"Arroz": 0, "Feijão": 0, "Açúcar": 0, "Café": 0}
-origens = {"Cras1": 1, "Cras2": 2}
-destinos = {"Cras1": 1, "Cras2": 2}
+tipo_transacao = st.radio(
+    label="Tipo de Transação",
+    options=["Entrada", "Saída"],
+    index=0,
+    horizontal=True
+)
 
 
-item_input = st.selectbox(label="Selecione o item", options=itens.keys())
+item_input = st.selectbox(label="Selecione o item", options=lista_itens)
 
 quantidade_input = st.number_input(label="Digite a quantidade", min_value=0)
 
 origem_input = st.selectbox(label="Selecione a origem", options=origens.keys())
+
 destino_input = st.selectbox(label="Selecione o destino", options=destinos.keys())
+
 obs = st.text_input(label="OBSERVAÇÃO")
+
 botao_estoque = st.button(label="Adicionar")
 
 
 
 if botao_estoque:
     if quantidade_input == 0:
-        st.markdown("Quantidade inválida!")
+        st.error("Quantidade inválida!")
     elif origem_input == destino_input:
-        st.markdown("Origem e destino são o mesmo, verifique os dados!")
+        st.error("Origem e destino são os mesmos, verifique os dados!")
     else:
         data = pd.to_datetime("now")
         data_formatada = pd.to_datetime('now').strftime('%Y-%m-%d %H:%M:%S')
         nova_transacao = {"data": data_formatada, "item": item_input, "quantidade": quantidade_input,"Origem": origem_input, "Destino": destino_input, "obs": obs}
         st.session_state.dados.append(nova_transacao)
+        st.success("Item registrado!")
         print(st.session_state.dados)
         nova_lina = list(nova_transacao.values())
-        aba_estoque.append_row(nova_lina)
+        if tipo_transacao == "Entrada":
+            aba_entradas.append_row(nova_lina)
+        elif tipo_transacao == "Saída":
+            aba_saidas.append_row(nova_lina)   
+        else:
+            st.error("Error no tipo de transação") 
+            
         
 if st.session_state.dados:
     st.subheader("Dados Atuais")
