@@ -38,12 +38,30 @@ aba_entradas = get_sheet(cliente, "Entradas")
 # ------------------------------------------------- BANCO DE DADOS ----------------------------------------------------------------- 
 @st.cache_resource
 def conexao_bd():
-    con = sqlite3.connect('estoque.bd', check_same_thread=False)
+    con = sqlite3.connect('estoque.bd', check_same_thread=False, isolation_level=None)
     
     con.execute('''
                 CREATE TABLE IF NOT EXISTS itens_bd(
                     id INTEGER PRIMARY KEY,
                     nome_item TEXT UNIQUE NOT NULL
+                    )
+            ''')
+    con.execute('''
+                CREATE TABLE IF NOT EXISTS origens_bd(
+                    id INTEGER PRIMARY KEY,
+                    nome_origem TEXT UNIQUE NOT NULL
+                    )
+            ''')
+    con.execute('''
+                CREATE TABLE IF NOT EXISTS destinos_bd(
+                    id INTEGER PRIMARY KEY,
+                    nome_destino TEXT UNIQUE NOT NULL
+                    )
+            ''')
+    con.execute('''
+                CREATE TABLE IF NOT EXISTS medidas_bd(
+                    id INTEGER PRIMARY KEY,
+                    nome_medida TEXT UNIQUE NOT NULL
                     )
             ''')
 
@@ -57,7 +75,6 @@ con = conexao_bd()
 
 # %%
 
-itens = {"Arroz": 0, "Feijão": 0, "Açúcar": 0, "Café": 0}
 origens = {"Cras1": 1, "Cras2": 2}
 destinos = {"Cras1": 1, "Cras2": 2}
 medidas = ["kg", "L", "g"]
@@ -70,13 +87,31 @@ def get_lista_itens(conn):
     lista = [row[0] for row in cursor.fetchall()]
     return lista
 
+def inserir_novo_item(conn, nome):
+    
+    cursor = conn.cursor()
+    conn.commit()
+    cursor.execute("INSERT INTO itens_bd(nome_item) VALUES (?)", (nome,))
+
+def inserir_nova_origem(conn, nome):
+    
+    cursor = conn.cursor()
+    conn.commit()
+    cursor.execute("INSERT INTO origens_bd(nome_origem) VALUES (?)", (nome,))
+
+def inserir_novo_destino(conn, nome):
+    
+    cursor = conn.cursor()
+    conn.commit()
+    cursor.execute("INSERT INTO destinos_bd(nome_destino) VALUES (?)", (nome,))
+    
+def inserir_nova_medida(conn, nome):
+    
+    cursor = conn.cursor()
+    conn.commit()
+    cursor.execute("INSERT INTO medidas_bd(nome_medida) VALUES (?)", (nome,))
+
 lista_itens = get_lista_itens(con)
-
-
-print(lista_itens)
-
-
-
 
 # %%
 if not "dados" in st.session_state:
@@ -114,7 +149,6 @@ if pag_selecionada == "Registro de Transação":
     botao_estoque = st.button(label="Adicionar")
 
 
-
     if botao_estoque:
         if quantidade_input == 0:
             st.error("Quantidade inválida!")
@@ -149,20 +183,49 @@ elif pag_selecionada == "Gerenciamento de campos":
     
     
     st.title("Gerenciamento de campos")
-    st.subheader("Cadastro de item")
     
-    col1, col2, col3, col4 = st.columns([1,1.2,1.2,5])
+    col1, col2, col3, col4 = st.columns([1,1.2,1.2,1.2])
+    
+    if 'menu' not in st.session_state:
+        st.session_state.menu = None
+        
+        
+    def set_menu(nome_menu):
+            st.session_state.menu = nome_menu
+
+        
     
     with col1:
-        btn_item = st.button("Item")
+        btn_item = st.button("Item", on_click=set_menu, args=['item'])
     
     with col2:
-        btn_origem = st.button("Origem")
+        btn_origem = st.button("Origem", on_click=set_menu,args=['origem'])
     
     with col3:
-        btn_destino = st.button("Destino")
-        
-    if btn_item:
-        nome_item = st.text_input("Digite o nome do item que deseja cadastrar")
+        btn_destino = st.button("Destino", on_click=set_menu, args=['destino'])
+    with col4:
+        btn_medida = st.button("Medida", on_click=set_menu, args=['medida'])
     
+
+    
+    if st.session_state.menu == 'item':
+        st.subheader("Cadastro de item")
+        nome_item = st.text_input("Digite o nome do item que deseja cadastrar")
+        btn_registrar = st.button("Cadastrar")
+
+        if btn_registrar:
+            if nome_item != "":
+                inserir_novo_item(con, nome_item)
+            else:
+                st.error("Digite um nome")
+        
+                
+    elif st.session_state.menu == 'origem':
+        st.subheader("Cadastro de local Origem")
+        nome_item = st.text_input("Digite o nome do local que deseja cadastrar")
+        btn_registrar_or = st.button("Cadastrar")
+
+        if btn_registrar_or:
+            inserir_novo_item(con, nome_item)
+            
     
