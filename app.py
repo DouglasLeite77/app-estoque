@@ -218,8 +218,6 @@ elif pag_selecionada == "Gerenciamento de campos":
                 inserir_novo_item(con, nome_item)
             else:
                 st.error("Digite um nome")
-        
-                
     elif st.session_state.menu == 'origem':
         st.subheader("Cadastro de local Origem")
         nome_item = st.text_input("Digite o nome do local que deseja cadastrar")
