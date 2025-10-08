@@ -107,12 +107,15 @@ def get_lista_medidas(conn):
 
 def retirar_item(conn, nome):
     cursor = conn.cursor()
+    
+    conn.commit()
+    cursor.execute("DELETE from itens_bd WHERE nome_item = (?)", (nome,))
 
 def inserir_novo_item(conn, nome):
     
     cursor = conn.cursor()
-    conn.commit()
     cursor.execute("INSERT INTO itens_bd(nome_item) VALUES (?)", (nome,))
+    conn.commit()
 
 def inserir_nova_origem(conn, nome):
     
@@ -295,7 +298,14 @@ elif pag_selecionada == "Gerenciamento de campos":
     elif gerenciamento == "Retirar":
         
         if st.session_state.menu == "item":
-            st.selectbox("Itens", options=lista_itens)       
+            item = st.selectbox("Itens", options=lista_itens)
             btn_retirar = st.button("Retirar")
             if btn_retirar:
+                if item != "":
+                    retirar_item(con, item)
+                    st.session_state.feedback = f"Item '{item}' retirado com sucesso"
+                    st.session_state.menu = None
+                    st.rerun()
+                else:
+                    st.error("Digite o nome do item")
                 
