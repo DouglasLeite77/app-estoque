@@ -75,11 +75,6 @@ con = conexao_bd()
 
 # %%
 
-origens = {"Cras1": 1, "Cras2": 2}
-destinos = {"Cras1": 1, "Cras2": 2}
-medidas = ["kg", "L", "g"]
-
-
 def get_lista_itens(conn):
     cursor = conn.cursor()
     
@@ -110,6 +105,24 @@ def retirar_item(conn, nome):
     
     conn.commit()
     cursor.execute("DELETE from itens_bd WHERE nome_item = (?)", (nome,))
+    
+def retirar_origem(conn, nome):
+    cursor = conn.cursor()
+    
+    conn.commit()
+    cursor.execute("DELETE from origens_bd WHERE nome_origem = (?)", (nome,))
+    
+def retirar_destino(conn, nome):
+    cursor = conn.cursor()
+    
+    conn.commit()
+    cursor.execute("DELETE from destinos_bd WHERE nome_destino = (?)", (nome,))
+    
+def retirar_medida(conn, nome):
+    cursor = conn.cursor()
+    
+    conn.commit()
+    cursor.execute("DELETE from medidas_bd WHERE nome_medida = (?)", (nome,))
 
 def inserir_novo_item(conn, nome):
     
@@ -144,8 +157,6 @@ lista_medida = get_lista_medidas(con)
 if not "dados" in st.session_state:
     st.session_state.dados = []
     
-
-
 pag_selecionada = st.sidebar.radio("Navegação", ["Registro de Transação", "Gerenciamento de campos"])
 
 if pag_selecionada == "Registro de Transação":
@@ -167,6 +178,7 @@ if pag_selecionada == "Registro de Transação":
 
     with col2:
         medida_unidade = st.selectbox(label="Selecione a unidade de medida", options=lista_medida)
+    
     origem_input = st.selectbox(label="Selecione a origem", options=lista_origens)
 
     destino_input = st.selectbox(label="Selecione o destino", options=lista_destinos)
@@ -206,8 +218,7 @@ if pag_selecionada == "Registro de Transação":
 elif pag_selecionada == "Gerenciamento de campos":
     
 
-    
-    
+
     st.title("Gerenciamento de campos")
     
     gerenciamento = st.radio(
@@ -299,7 +310,7 @@ elif pag_selecionada == "Gerenciamento de campos":
         
         if st.session_state.menu == "item":
             item = st.selectbox("Itens", options=lista_itens)
-            btn_retirar = st.button("Retirar")
+            btn_retirar = st.button("Retirar", key="item")
             if btn_retirar:
                 if item != "":
                     retirar_item(con, item)
@@ -307,5 +318,41 @@ elif pag_selecionada == "Gerenciamento de campos":
                     st.session_state.menu = None
                     st.rerun()
                 else:
-                    st.error("Digite o nome do item")
+                    st.error("Selecione o nome do item")
+                    
+        if st.session_state.menu == "origem":
+            origem = st.selectbox("Origens", options=lista_origens)
+            btn_retirar = st.button("Retirar",key="origem")
+            if btn_retirar:
+                if origem != "":
+                    retirar_origem(con,origem)
+                    st.session_state.feedback = f"Item '{origem}' retirado com sucesso"
+                    st.session_state.menu = None
+                    st.rerun()
+                else:
+                    st.error("Selecione o nome da origem")
+                
+        if st.session_state.menu == "destino":
+            destino = st.selectbox("destino", options=lista_destinos)
+            btn_retirar = st.button("Retirar",key="destino")
+            if btn_retirar:
+                if destino != "":
+                    retirar_destino(con,destino)
+                    st.session_state.feedback = f"Item '{destino}' retirado com sucesso"
+                    st.session_state.menu = None
+                    st.rerun()
+                else:
+                    st.error("Selecione o nome do destino")
+
+        if st.session_state.menu == "medida":
+            medida = st.selectbox("medida", options=lista_medida)
+            btn_retirar = st.button("Retirar",key="medida")
+            if btn_retirar:
+                if medida != "":
+                    retirar_medida(con,medida)
+                    st.session_state.feedback = f"Item '{medida}' retirado com sucesso"
+                    st.session_state.menu = None
+                    st.rerun()
+                else:
+                    st.error("Selecione o nome do medida")
                 
