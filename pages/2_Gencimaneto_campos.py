@@ -71,52 +71,64 @@ if gerenciamento == "Cadastras":
         btn_registrar = st.button("Cadastrar")
 
         if btn_registrar:
-            if nome_item != "":
-                    inserir_novo_item(con, nome_item)    
-                    st.session_state.feedback = f"Item '{nome_item}' cadastrado com sucesso"
-                    st.session_state.menu = None
-                    st.rerun()
+            if nome_item in lista_itens:
+                st.error(f"Item '{nome_item} já esta cadastrado") 
             else:
-                st.error("Digite um nome")
+                if nome_item != "":
+                        inserir_novo_item(con, nome_item)    
+                        st.session_state.feedback = f"Item '{nome_item}' cadastrado com sucesso"
+                        st.session_state.menu = None
+                        st.rerun()
+                else:
+                    st.error("Digite o nome do item")
     elif st.session_state.menu == 'origem':
         st.subheader("Cadastro de local origem")
         nome = st.text_input("Digite o nome do local de origem que deseja cadastrar")
         btn_registrar_or = st.button("Cadastrar")
 
         if btn_registrar_or:
-            if nome != "":
-                    inserir_nova_origem(con, nome)    
-                    st.session_state.feedback = f"Local '{nome}' cadastrado com sucesso"
-                    st.session_state.menu = None
-                    st.rerun()
+            if nome in lista_origens:
+                st.error(f"Item '{nome} já esta cadastrado") 
             else:
-                st.error("Digite o nome do local origem")
+                if nome != "":
+                        inserir_nova_origem(con, nome)    
+                        st.session_state.feedback = f"Local '{nome}' cadastrado com sucesso"
+                        st.session_state.menu = None
+                        st.rerun()
+                else:
+                    st.error("Digite o nome do local origem")
     elif st.session_state.menu == 'destino':
         st.subheader("Cadastro de local destino")
         nome = st.text_input("Digite o nome do local de destino que deseja cadastrar")
         btn_registrar_or = st.button("Cadastrar")
 
         if btn_registrar_or:
-            if nome != "":
-                    inserir_novo_destino(con, nome)    
-                    st.session_state.feedback = f"Local '{nome}' cadastrado com sucesso"
-                    st.session_state.menu = None
-                    st.rerun()
+            if nome in lista_destinos:
+                st.error(f"Item '{nome} já esta cadastrado") 
             else:
-                st.error("Digite o nome do local origem")
+                if nome != "":
+                        inserir_novo_destino(con, nome)    
+                        st.session_state.feedback = f"Local '{nome}' cadastrado com sucesso"
+                        st.session_state.menu = None
+                        st.rerun()
+                else:
+                    st.error("Digite o nome do local destino")
     elif st.session_state.menu == 'medida':
         st.subheader("Cadastro de medida")
         nome = st.text_input("Digite o nome da medida que deseja cadastrar")
         btn_registrar_or = st.button("Cadastrar")
 
         if btn_registrar_or:
-            if nome != "":
-                    inserir_nova_medida(con, nome)    
-                    st.session_state.feedback = f"Medida '{nome}' cadastrado com sucesso"
-                    st.session_state.menu = None
-                    st.rerun()
+            if nome in lista_medida:
+                st.error(f"Item '{nome} já esta cadastrado") 
             else:
-                st.error("Digite o nome do local origem")
+                if nome != "":
+                        inserir_nova_medida(con, nome)    
+                        st.session_state.feedback = f"Medida '{nome}' cadastrado com sucesso"
+                        st.session_state.menu = None
+                        st.rerun()
+                else:
+                    st.error("Digite o nome da medida")
 elif gerenciamento == "Retirar":
     
     if st.session_state.menu == "item":

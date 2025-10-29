@@ -27,8 +27,7 @@ def get_sheet(_c, esc):
     return aba
 
 cliente = get_gspread_client()
-aba_saidas = get_sheet(cliente, "Saídas")
-aba_entradas = get_sheet(cliente, "Entradas")
+aba_transacoes = get_sheet(cliente, "Transações")
 
 # %%
 @st.cache_resource
@@ -59,6 +58,16 @@ def conexao_bd():
                     nome_medida TEXT UNIQUE NOT NULL
                     )
             ''')
+    con.execute('''
+            CREATE TABLE IF NOT EXISTS estoque(
+                id_item INTEGER ,
+                id_local INTEGER ,
+                quantidade  REAL NOT NULL DEFAULT 0,
+                PRIMARY KEY (id_item, id_local),
+                FOREIGN KEY (id_item) REFERENCES itens_bd(id) ON DELETE RESTRICT,
+                FOREIGN KEY (id_local) REFERENCES origens_bd(id) ON DELETE RESTRICT
+                )
+        ''')
 
     con.commit()
     return con
@@ -140,4 +149,11 @@ def inserir_nova_medida(conn, nome):
     cursor = conn.cursor()
     conn.commit()
     cursor.execute("INSERT INTO medidas_bd(nome_medida) VALUES (?)", (nome,))
+    
+def gerenciamento_estoque(conn,local,item, qtd):
+    
+    cursor = conn.cursor()
 
+    cursor.execute("INSERT INTO estoque(id_item, id_local) VALUES (?,?)", (item, local))
+
+    conn.commit()

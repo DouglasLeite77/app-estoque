@@ -6,8 +6,7 @@ import streamlit as st
 
 from data_manager import (
     con,
-    aba_entradas, 
-    aba_saidas,
+    aba_transacoes, 
     get_lista_itens,
     get_lista_origens,
     get_lista_destinos,
@@ -27,12 +26,6 @@ st.set_page_config(
 )
 
 st.title("Gerenciamento de estoque")
-tipo_transacao = st.radio(
-    label="Tipo de Transação",
-    options=["Entrada", "Saída"],
-    index=0,
-    horizontal=True
-)
 
 if not "dados" in st.session_state:
     st.session_state.dados = []
@@ -65,15 +58,8 @@ if botao_estoque:
         data_formatada = pd.to_datetime('now').strftime('%Y-%m-%d %H:%M:%S')
         nova_transacao = {"data": data_formatada, "item": item_input, "quantidade": quantidade_input,"Medida": medida_unidade, "Origem": origem_input, "Destino": destino_input, "obs": obs}
         st.success("Item registrado!")
-        nova_lina = list(nova_transacao.values())
-        if tipo_transacao == "Entrada":
-            aba_entradas.append_row(nova_lina)
-            nova_transacao['Tipo de transação'] = "Entrada"
-        elif tipo_transacao == "Saída":
-            aba_saidas.append_row(nova_lina)   
-            nova_transacao['Tipo de transação'] = "Saída"
-        else:
-            st.error("Error no tipo de transação") 
+        nova_linha = list(nova_transacao.values())
+        aba_transacoes.append_row(nova_linha)
         st.session_state.dados.append(nova_transacao)
             
         
