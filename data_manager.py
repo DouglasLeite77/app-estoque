@@ -32,7 +32,7 @@ aba_transacoes = get_sheet(cliente, "Transações")
 # %%
 @st.cache_resource
 def conexao_bd():
-    con = sqlite3.connect('estoque.bd', check_same_thread=False, isolation_level=None)
+    con = sqlite3.connect('estoque.db', check_same_thread=False, isolation_level=None)
     
     con.execute('''
                 CREATE TABLE IF NOT EXISTS itens_bd(
@@ -150,10 +150,50 @@ def inserir_nova_medida(conn, nome):
     conn.commit()
     cursor.execute("INSERT INTO medidas_bd(nome_medida) VALUES (?)", (nome,))
     
-def gerenciamento_estoque(conn,local,item, qtd):
+def transacoes_estoque(conn,item, qtd, origem, destino):
     
     cursor = conn.cursor()
 
-    cursor.execute("INSERT INTO estoque(id_item, id_local) VALUES (?,?)", (item, local))
-
+    cursor.execute("SELECT quantidade FROM estoque WHERE id_item = ? AND id_local = ?", (item, origem))
+    
+    registro_origem = cursor.fetchone()
+    
+    if registro_origem:
+            
+        if registro_origem[0] >= qtd:
+            
+            qtd_atual = registro_origem[0]
+            nova_qtd = qtd_atual - qtd
+            cursor.execute("UPDATE estoque SET quantidade = ? WHERE id_item = ? AND id_local = ?", (nova_qtd,item,origem))
+            
+            cursor.execute("SELECT quantidade FROM estoque WHERE id_item = ? AND id_local = ?", (item, destino))
+            registro_destino = cursor.fetchone()
+            if registro_destino:    
+                qtd_atual = registro_destino[0]
+                nova_qtd = qtd_atual + qtd
+                cursor.execute("UPDATE estoque SET quantidade = ? WHERE id_item = ? AND id_local = ?", (nova_qtd,item,destino))
+            else:
+                cursor.execute("INSERT INTO estoque (id_item, id_local, quantidade) VALUES (?,?,?)", (item,destino,qtd))
+        else:
+            st.error("Estoque insuficiente")
+    else:
+        st.error("Local origem sem estoque")
+        
     conn.commit()
+
+def add_estoque(conn, item, qtd, local):
+    
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT quantidade FROM estoque WHERE id_item = ? AND id_local = ?", (item, local))
+    
+    registro = cursor.fetchone()
+    
+    if registro:
+        qtd_atual = registro[0]
+        nova_qtd = qtd_atual + qtd
+        cursor.execute("UPDATE estoque SET quantidade = ? WHERE id_item = ? AND id_local = ?", (nova_qtd,item,local))
+    else:
+        cursor.execute("INSERT INTO estoque (id_item, id_local, quantidade) VALUES (?,?,?)", (item,local,qtd))
+        
+    print(f"Adição de estoque concluída: Item {item} no Local {local} adicionado em {qtd} unidades.")

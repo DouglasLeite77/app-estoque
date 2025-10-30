@@ -2,6 +2,10 @@ import pandas as pd
 import streamlit as st
 
 # %% 
+st.set_page_config(
+    page_title="Gerenciamento de campos",
+    page_icon="📦"
+)
 
 from data_manager import (
     con,
@@ -25,10 +29,6 @@ lista_destinos = get_lista_destinos(con)
 lista_medida = get_lista_medidas(con)
 # %% 
 
-st.set_page_config(
-    page_title="Gerenciamento de campos",
-    page_icon="📦"
-)
 
 st.title("Gerenciamento de campos")
 

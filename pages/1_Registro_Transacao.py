@@ -3,6 +3,10 @@ import pandas as pd
 import streamlit as st
 
 # %%
+st.set_page_config(
+    page_title="Registro de transações",
+    page_icon="📦"
+)
 
 from data_manager import (
     con,
@@ -11,19 +15,14 @@ from data_manager import (
     get_lista_origens,
     get_lista_destinos,
     get_lista_medidas,
+    transacoes_estoque,
+    add_estoque,
 )
 
 lista_itens = get_lista_itens(con)
 lista_origens = get_lista_origens(con)
 lista_destinos = get_lista_destinos(con)
 lista_medida = get_lista_medidas(con)
-
-# %%
-
-st.set_page_config(
-    page_title="Registro de transações",
-    page_icon="📦"
-)
 
 st.title("Gerenciamento de estoque")
 
@@ -61,7 +60,7 @@ if botao_estoque:
         nova_linha = list(nova_transacao.values())
         aba_transacoes.append_row(nova_linha)
         st.session_state.dados.append(nova_transacao)
-            
+        transacoes_estoque(con,item_input,quantidade_input,origem_input,destino_input)
         
 if st.session_state.dados:
     st.subheader("Dados Atuais")
