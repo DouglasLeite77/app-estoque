@@ -24,7 +24,7 @@ lista_origens = get_lista_origens(con)
 lista_destinos = get_lista_destinos(con)
 lista_medida = get_lista_medidas(con)
 
-st.title("Gerenciamento de estoque")
+st.title("Transações de itens")
 
 if not "dados" in st.session_state:
     st.session_state.dados = []

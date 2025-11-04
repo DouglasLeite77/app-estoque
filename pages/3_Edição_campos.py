@@ -3,7 +3,7 @@ import streamlit as st
 
 # %% 
 st.set_page_config(
-    page_title="Gerenciamento de campos",
+    page_title="Edição de campos",
     page_icon="📦"
 )
 
@@ -30,7 +30,7 @@ lista_medida = get_lista_medidas(con)
 # %% 
 
 
-st.title("Gerenciamento de campos")
+st.title("Edição de campos")
 
 gerenciamento = st.radio(
     label="Tipo de Transação",
