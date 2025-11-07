@@ -76,7 +76,21 @@ con = conexao_bd()
 
 
 # %%
-
+def get_qtd(conn, item, local):
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT id_item, quantidade FROM estoque WHERE id_item = ? and id_local = ?", (item,local))
+    
+    lista = cursor.fetchone()
+    if lista:
+        nome = lista[0]
+        qtd = lista[1]
+        return nome, qtd
+    else:
+        nome = item
+        return item, 0
+        
+    
 def get_lista_itens(conn):
     cursor = conn.cursor()
     

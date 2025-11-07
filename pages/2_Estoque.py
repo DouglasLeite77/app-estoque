@@ -10,6 +10,7 @@ from data_manager import (
     get_lista_medidas,
     transacoes_estoque,
     add_estoque,
+    get_qtd,
 )
 
 # %%
@@ -21,4 +22,9 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Nivél de estoque")
+    lista_itens= get_lista_itens(con)
+    for i in lista_itens:
+        nome, qtd = get_qtd(con,i,"casa1")
+        st.text(nome)
+        st.text(qtd)
     
