@@ -16,15 +16,30 @@ from data_manager import (
 # %%
 
 
-st.title("Adição de estoque")
+st.title("Controle de estoque")
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns([1,0.2,1])
 
 with col1:
     st.subheader("Nivél de estoque")
     lista_itens= get_lista_itens(con)
     for i in lista_itens:
-        nome, qtd = get_qtd(con,i,"casa1")
-        st.text(nome)
-        st.text(qtd)
+        nome, qtd = get_qtd(con,i,"Matriz")
+        porcentagem = qtd / 1000
+        if porcentagem > 1.0:
+            porcentagem = 1.0
+        texto_progresso = f"{nome} — {qtd} unidades"
+        st.progress(porcentagem, texto_progresso)
     
+with col3:
+
+    medidas = get_lista_medidas(con)
+    st.subheader("Adicionar estoque")
+    item = st.selectbox(label="Selecione o item", options=lista_itens)
+    qtd = st.number_input("Digite a quantidade", min_value=0)
+    med =st.selectbox("Selecione a medida", options=medidas)
+    local = "Matriz"
+    btn = st.button("Adicionar")
+    if btn:
+        add_estoque(con,item,qtd,local)
+        pass
