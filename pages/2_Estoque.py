@@ -11,7 +11,6 @@ from data_manager import (
     transacoes_estoque,
     add_estoque,
     get_qtd,
-    retirar_estoque
 )
 
 # %%
@@ -26,7 +25,6 @@ with col1:
     lista_itens= get_lista_itens(con)
     for i in lista_itens:
         nome, qtd = get_qtd(con,i,"casa1")
-        porcentagem = qtd / 1000
-        texto_progresso = f"{nome} — {qtd} unidades"
-        st.progress(porcentagem, text=texto_progresso)
+        st.text(nome)
+        st.text(qtd)
     
