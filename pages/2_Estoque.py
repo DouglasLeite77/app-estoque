@@ -11,6 +11,7 @@ from data_manager import (
     transacoes_estoque,
     add_estoque,
     get_qtd,
+    remove_estoque,
 )
 
 # %%
@@ -41,5 +42,5 @@ with col3:
     local = "Matriz"
     btn = st.button("Adicionar")
     if btn:
-        add_estoque(con,item,qtd,local)
-        pass
+        remove_estoque(con,item,qtd,local)
+        st.rerun()
