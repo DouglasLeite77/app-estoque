@@ -36,9 +36,9 @@ with col1:
     quantidade_input = st.number_input(label="Digite a quantidade", min_value=0)
 
 with col2:
-    medida_unidade = st.selectbox(label="Selecione a unidade de medida", options=lista_medida)
+    medida_unidade = st.selectbox(label="Selecione a unidade de medida", options=lista_medida,index=1)
 
-origem_input = st.selectbox(label="Selecione a origem", options=lista_origens)
+origem_input = st.selectbox(label="Selecione a origem", options=lista_origens, index=5)
 
 destino_input = st.selectbox(label="Selecione o destino", options=lista_destinos)
 
@@ -60,7 +60,7 @@ if botao_estoque:
         nova_linha = list(nova_transacao.values())
         aba_transacoes.append_row(nova_linha)
         st.session_state.dados.append(nova_transacao)
-        transacoes_estoque(con,item_input,quantidade_input,origem_input,destino_input)
+        transacoes_estoque(con,item_input, quantidade_input, origem_input, destino_input)
         
 if st.session_state.dados:
     st.subheader("Dados Atuais")

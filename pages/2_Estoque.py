@@ -42,5 +42,5 @@ with col3:
     local = "Matriz"
     btn = st.button("Adicionar")
     if btn:
-        remove_estoque(con,item,qtd,local)
+        add_estoque(con,item,qtd,local)
         st.rerun()
