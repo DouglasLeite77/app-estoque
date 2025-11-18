@@ -23,9 +23,11 @@ col1, col2, col3 = st.columns([1,0.2,1])
 
 with col1:
     st.subheader("Nivél de estoque")
-    lista_itens= get_lista_itens(con)
+    lista_itens = get_lista_itens(con)
+    locais = get_lista_origens(con)
+    local = st.selectbox(label="Selecione o local",options=locais)
     for i in lista_itens:
-        nome, qtd = get_qtd(con,i,"Matriz")
+        nome, qtd = get_qtd(con,i,local)
         porcentagem = qtd / 1000
         if porcentagem > 1.0:
             porcentagem = 1.0
@@ -33,9 +35,9 @@ with col1:
         st.progress(porcentagem, texto_progresso)
     
 with col3:
-
+    
     medidas = get_lista_medidas(con)
-    st.subheader("Adicionar estoque")
+    st.subheader("Entrada de estoque")
     item = st.selectbox(label="Selecione o item", options=lista_itens)
     qtd = st.number_input("Digite a quantidade", min_value=0)
     med =st.selectbox("Selecione a medida", options=medidas)
