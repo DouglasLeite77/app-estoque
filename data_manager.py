@@ -219,12 +219,16 @@ def remove_estoque(conn, item, qtd, local):
     cursor.execute("SELECT quantidade FROM estoque WHERE id_item = ? AND id_local = ?", (item, local))
     
     registro = cursor.fetchone()
+    if not registro:
+        st.error("Produto sem registro")
+        return
     
-    if registro:
-        qtd_atual = registro[0]
-        nova_qtd = qtd_atual - qtd
-        cursor.execute("UPDATE estoque SET quantidade = ? WHERE id_item = ? AND id_local = ?", (nova_qtd,item,local))
     else:
-        cursor.execute("INSERT INTO estoque (id_item, id_local, quantidade) VALUES (?,?,?)", (item,local,qtd))
-        
-    print(f"Adição de estoque concluída: Item {item} no Local {local} adicionado em {qtd} unidades.")
+        qtd_atual = registro[0]
+        if qtd_atual < qtd:
+            st.error("Quantidade insuficiente")
+            return
+        else:
+            nova_qtd = qtd_atual - qtd
+            cursor.execute("UPDATE estoque SET quantidade = ? WHERE id_item = ? AND id_local = ?", (nova_qtd,item,local))   
+            print(f"Remoção de estoque concluída: Item {item} no Local {local} adicionado em {qtd} unidades.")

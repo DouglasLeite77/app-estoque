@@ -1,5 +1,6 @@
 import pandas
 import streamlit as st
+import time
 
 from data_manager import (
     con,
@@ -17,9 +18,28 @@ from data_manager import (
 # %%
 
 
+st.markdown(
+    """
+    <style>
+    .main .block-container {
+        max-width: 1000px;
+    }
+    div[role="radiogroup"] {
+        display: flex;
+        justify-content: center;
+        aling-itens: center;
+        text-aling: center;
+    }
+    .stRadio > label {
+    justify-content: center;
+    width: 100%;
+}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 st.title("Controle de estoque")
-
-col1, col2, col3 = st.columns([1,0.2,1])
+col1, col2 = st.columns([1,1], gap="medium")
 
 with col1:
     st.subheader("Nivél de estoque")
@@ -33,16 +53,30 @@ with col1:
             porcentagem = 1.0
         texto_progresso = f"{nome} — {qtd} unidades"
         st.progress(porcentagem, texto_progresso)
-    
-with col3:
-    
+        
+
+with col2:
     medidas = get_lista_medidas(con)
-    st.subheader("Entrada de estoque")
-    item = st.selectbox(label="Selecione o item", options=lista_itens)
-    qtd = st.number_input("Digite a quantidade", min_value=0)
-    med =st.selectbox("Selecione a medida", options=medidas)
-    local = "Matriz"
-    btn = st.button("Adicionar")
-    if btn:
-        add_estoque(con,item,qtd,local)
-        st.rerun()
+    tab_entrada, tab_saida = st.tabs(["📥 Entrada", "📤 Saída"])
+    with tab_entrada:
+        st.subheader("Entrada de estoque")
+        item = st.selectbox(label="Selecione o item", options=lista_itens, key="item_entrada")
+        qtd = st.number_input("Digite a quantidade", min_value=0, key="qtd_entrada")
+        med =st.selectbox("Selecione a medida", options=medidas, index=1, key="med_entrada")
+        btn = st.button("Adicionar", key="btn_entrada")
+        if btn:
+            add_estoque(con,item,qtd,local)
+            st.success("Item adicionado ao estoque")
+            time.sleep(3)
+            st.rerun()
+            
+
+    with tab_saida:
+        st.subheader("Saida de estoque")
+        item = st.selectbox(label="Selecione o item", options=lista_itens, key="item_saida")
+        qtd = st.number_input("Digite a quantidade", min_value=0, key="qtd_saida")
+        med =st.selectbox("Selecione a medida", options=medidas, index=1, key="med_saida")
+        btn = st.button("Adicionar", key="btn_saida")
+        if btn:
+            remove_estoque(con,item,qtd,local)
+
