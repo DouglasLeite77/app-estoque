@@ -5,17 +5,6 @@ import sqlite3
 
 # %%
 
-@st.cache_resource()
-def get_gspread_client():
-    SCOPE = [
-        'https://www.googleapis.com/auth/spreadsheets',
-        'https://www.googleapis.com/auth/drive'
-    ]
-
-    creds = Credentials.from_service_account_file("./keys/credenciais.json", scopes=SCOPE)
-
-    cliente_gs = gspread.authorize(creds)
-    return cliente_gs
     
 @st.cache_resource()
 def get_sheet(_c, esc):
