@@ -3,12 +3,24 @@ from google.oauth2.service_account import Credentials
 import gspread
 import sqlite3
 import pandas as pd
+import shutil # Biblioteca para copiar arquivos
+import os
+
+DB_NO_GITHUB = "estoque.db"
+DB_NA_NUVEM = "/tmp/estoque.db"
+
+if not os.path.exists(DB_NA_NUVEM):
+    if os.path.exists(DB_NO_GITHUB):
+        shutil.copyfile(DB_NO_GITHUB, DB_NA_NUVEM)
+    else:
+        pass
+    
 
 
 # %%
 @st.cache_resource
 def conexao_bd():
-    con = sqlite3.connect('estoque.db', check_same_thread=False, timeout=30)
+    con = sqlite3.connect(DB_NA_NUVEM, check_same_thread=False, timeout=30)
     
     con.execute('''
                 CREATE TABLE IF NOT EXISTS itens_bd(

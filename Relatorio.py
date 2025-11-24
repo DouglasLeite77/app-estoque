@@ -17,7 +17,7 @@ st.markdown(
     <style>
     .block-container {
         max-width: 1200px !important;
-        padding-top: 2rem !important; /* Ajuda a diminuir o espaço em branco no topo */
+        padding-top: 2rem !important;
     }
     </style>
     """,
