@@ -6,17 +6,6 @@ import sqlite3
 # %%
 
     
-@st.cache_resource()
-def get_sheet(_c, esc):
-    nome_panilha = "app-estoque"
-
-    panilha = _c.open(nome_panilha)
-
-    aba = panilha.worksheet(esc)
-    return aba
-
-cliente = get_gspread_client()
-aba_transacoes = get_sheet(cliente, "Transações")
 
 # %%
 @st.cache_resource
