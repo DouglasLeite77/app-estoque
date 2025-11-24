@@ -1,4 +1,3 @@
-# Home.py
 
 import streamlit as st
 import pandas as pd
@@ -16,8 +15,9 @@ from data_manager import(
 st.markdown(
     """
     <style>
-    .main .block-container {
-        max-width: 1200px;
+    .block-container {
+        max-width: 1200px !important;
+        padding-top: 2rem !important; /* Ajuda a diminuir o espaço em branco no topo */
     }
     </style>
     """,
