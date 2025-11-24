@@ -8,7 +8,7 @@ st.set_page_config(
     page_icon="📦"
 )
 
-from data_manager import (
+from pages.data_manager import (
     con,
     aba_transacoes, 
     get_lista_itens,
@@ -56,11 +56,11 @@ if botao_estoque:
         data = pd.to_datetime("now")
         data_formatada = pd.to_datetime('now').strftime('%Y-%m-%d %H:%M:%S')
         nova_transacao = {"data": data_formatada, "item": item_input, "quantidade": quantidade_input,"Medida": medida_unidade, "Origem": origem_input, "Destino": destino_input, "obs": obs}
-        st.success("Item registrado!")
-        nova_linha = list(nova_transacao.values())
-        aba_transacoes.append_row(nova_linha)
-        st.session_state.dados.append(nova_transacao)
-        transacoes_estoque(con,item_input, quantidade_input, origem_input, destino_input)
+        if transacoes_estoque(con,item_input, quantidade_input, origem_input, destino_input):
+            transacoes_estoque(con,item_input, quantidade_input, origem_input, destino_input)
+            nova_linha = list(nova_transacao.values())
+            aba_transacoes.append_row(nova_linha)
+            st.session_state.dados.append(nova_transacao)
         
 if st.session_state.dados:
     st.subheader("Dados Atuais")

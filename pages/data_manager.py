@@ -166,33 +166,9 @@ def inserir_nova_medida(conn, nome):
     
 def transacoes_estoque(conn,item, qtd, origem, destino):
     
-    cursor = conn.cursor()
 
-    cursor.execute("SELECT quantidade FROM estoque WHERE id_item = ? AND id_local = ?", (item, origem))
-    
-    registro_origem = cursor.fetchone()
-    
-    if registro_origem:
-            
-        if registro_origem[0] >= qtd:
-            
-            qtd_atual = registro_origem[0]
-            nova_qtd = qtd_atual - qtd
-            cursor.execute("UPDATE estoque SET quantidade = ? WHERE id_item = ? AND id_local = ?", (nova_qtd,item,origem))
-            
-            cursor.execute("SELECT quantidade FROM estoque WHERE id_item = ? AND id_local = ?", (item, destino))
-            registro_destino = cursor.fetchone()
-            if registro_destino:    
-                qtd_atual = registro_destino[0]
-                nova_qtd = qtd_atual + qtd
-                cursor.execute("UPDATE estoque SET quantidade = ? WHERE id_item = ? AND id_local = ?", (nova_qtd,item,destino))
-            else:
-                cursor.execute("INSERT INTO estoque (id_item, id_local, quantidade) VALUES (?,?,?)", (item,destino,qtd))
-        else:
-            st.error("Estoque insuficiente")
-    else:
-        st.error("Local origem sem estoque")
-        
+    if remove_estoque(conn,item, qtd, origem):
+        add_estoque(conn,item, qtd, destino)
     conn.commit()
 
 def add_estoque(conn, item, qtd, local):
@@ -211,6 +187,7 @@ def add_estoque(conn, item, qtd, local):
         cursor.execute("INSERT INTO estoque (id_item, id_local, quantidade) VALUES (?,?,?)", (item,local,qtd))
         
     print(f"Adição de estoque concluída: Item {item} no Local {local} adicionado em {qtd} unidades.")
+    st.success("Item transferido com sucesso")
     
 def remove_estoque(conn, item, qtd, local):
     
@@ -231,4 +208,5 @@ def remove_estoque(conn, item, qtd, local):
         else:
             nova_qtd = qtd_atual - qtd
             cursor.execute("UPDATE estoque SET quantidade = ? WHERE id_item = ? AND id_local = ?", (nova_qtd,item,local))   
-            print(f"Remoção de estoque concluída: Item {item} no Local {local} adicionado em {qtd} unidades.")
+            print(f"Remoção de estoque concluída: Item {item} no Local {local} removendo {qtd} unidades.")
+            return True

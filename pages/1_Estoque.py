@@ -2,7 +2,7 @@ import pandas
 import streamlit as st
 import time
 
-from data_manager import (
+from pages.data_manager import (
     con,
     aba_transacoes, 
     get_lista_itens,
@@ -40,7 +40,6 @@ st.markdown(
 )
 st.title("Controle de estoque")
 col1, col2 = st.columns([1,1], gap="medium")
-
 with col1:
     st.subheader("Nivél de estoque")
     lista_itens = get_lista_itens(con)
@@ -67,7 +66,7 @@ with col2:
         if btn:
             add_estoque(con,item,qtd,local)
             st.success("Item adicionado ao estoque")
-            time.sleep(3)
+            time.sleep(2)
             st.rerun()
             
 
