@@ -2,7 +2,7 @@ import pandas
 import streamlit as st
 import time
 
-from pages.data_manager import (
+from data_manager import (
     con,
     aba_transacoes, 
     get_lista_itens,

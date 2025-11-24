@@ -7,7 +7,7 @@ st.set_page_config(
     page_icon="📦"
 )
 
-from pages.data_manager import (
+from data_manager import (
     con,
     inserir_novo_item,
     inserir_nova_origem,

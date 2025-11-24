@@ -1,0 +1,6 @@
+streamlit
+pandas
+time
+google-auth
+google-api-python-client
+gspread

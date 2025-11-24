@@ -8,7 +8,7 @@ st.set_page_config(
     page_icon="📦"
 )
 
-from pages.data_manager import (
+from data_manager import (
     con,
     aba_transacoes, 
     get_lista_itens,

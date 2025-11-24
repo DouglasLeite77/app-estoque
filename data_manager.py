@@ -74,7 +74,6 @@ def conexao_bd():
 
 con = conexao_bd()
 
-
 # %%
 def get_qtd(conn, item, local):
     cursor = conn.cursor()
