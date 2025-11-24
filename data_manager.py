@@ -9,7 +9,7 @@ import sqlite3
 # %%
 @st.cache_resource
 def conexao_bd():
-    con = sqlite3.connect('estoque.db', check_same_thread=False, isolation_level=None)
+    con = sqlite3.connect('estoque.db', check_same_thread=False, isolation_level=None, timeout=30)
     
     con.execute('''
                 CREATE TABLE IF NOT EXISTS itens_bd(
@@ -45,13 +45,31 @@ def conexao_bd():
                 FOREIGN KEY (id_local) REFERENCES origens_bd(id) ON DELETE RESTRICT
                 )
         ''')
+    con.execute("""
+        CREATE TABLE IF NOT EXISTS historico (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            data_hora TEXT,
+            item TEXT,
+            origem TEXT,
+            destino TEXT,
+            quantidade INTEGER,
+            usuario TEXT
+        )
+    """)
 
     con.commit()
     return con
 
-con = sqlite3.connect("estoque.db", check_same_thread=False, timeout=30)
+con = conexao_bd()
 
 # %%
+def registrar_transf(item, origem, destino, quantidade,dataHora, usuario="Admin"):
+    cursor = con.cursor()
+    
+    cursor.execute("INSERT INTO historico (data_hora, item, origem, destino, quantidade, usuario) VALUES (?, ?, ?, ?, ?, ?)", (dataHora, item, origem, destino, quantidade, usuario))
+    con.commit()
+    cursor.close()
+
 def get_qtd(conn, item, local):
     cursor = conn.cursor()
     
@@ -64,9 +82,7 @@ def get_qtd(conn, item, local):
         return nome, qtd
     else:
         nome = item
-        return item, 0
-        
-    
+        return item, 0    
 def get_lista_itens(conn):
     cursor = conn.cursor()
     
