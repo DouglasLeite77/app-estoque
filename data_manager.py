@@ -49,7 +49,7 @@ def conexao_bd():
     con.commit()
     return con
 
-con = sqlite3.connect("estoque.db", check_same_thread=False)
+con = sqlite3.connect("estoque.db", check_same_thread=False, timeout=30)
 
 # %%
 def get_qtd(conn, item, local):
