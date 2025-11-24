@@ -10,7 +10,6 @@ st.set_page_config(
 
 from data_manager import (
     con,
-    aba_transacoes, 
     get_lista_itens,
     get_lista_origens,
     get_lista_destinos,
@@ -59,7 +58,6 @@ if botao_estoque:
         if transacoes_estoque(con,item_input, quantidade_input, origem_input, destino_input):
             transacoes_estoque(con,item_input, quantidade_input, origem_input, destino_input)
             nova_linha = list(nova_transacao.values())
-            aba_transacoes.append_row(nova_linha)
             st.session_state.dados.append(nova_transacao)
         
 if st.session_state.dados:

@@ -4,7 +4,6 @@ import time
 
 from data_manager import (
     con,
-    aba_transacoes, 
     get_lista_itens,
     get_lista_origens,
     get_lista_destinos,
