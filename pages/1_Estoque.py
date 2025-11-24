@@ -21,17 +21,17 @@ st.markdown(
     """
     <style>
     .main .block-container {
-        max-width: 1500px;
+        max-width: 1000px !important;
     }
     div[role="radiogroup"] {
-        display: flex;
-        justify-content: center;
-        aling-itens: center;
-        text-aling: center;
+        display: flex !important;
+        justify-content: center !important;
+        aling-itens: center !important;
+        text-aling: center !important;
     }
     .stRadio > label {
-    justify-content: center;
-    width: 100%;
+    justify-content: center !important;
+    width: 100% !important;
     }
     div[data-testid="stMetric"] {
     margin-bottom: -20px !important;
