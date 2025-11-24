@@ -16,6 +16,7 @@ from data_manager import (
     get_lista_medidas,
     transacoes_estoque,
     add_estoque,
+    registrar_transf,
 )
 
 lista_itens = get_lista_itens(con)
@@ -57,6 +58,7 @@ if botao_estoque:
         nova_transacao = {"data": data_formatada, "item": item_input, "quantidade": quantidade_input,"Medida": medida_unidade, "Origem": origem_input, "Destino": destino_input, "obs": obs}
         if transacoes_estoque(con,item_input, quantidade_input, origem_input, destino_input):
             transacoes_estoque(con,item_input, quantidade_input, origem_input, destino_input)
+            registrar_transf(item_input, origem_input, destino_input,quantidade_input, data_formatada)
             nova_linha = list(nova_transacao.values())
             st.session_state.dados.append(nova_transacao)
             st.success("Item transferido com sucesso")
