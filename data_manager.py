@@ -69,7 +69,15 @@ def registrar_transf(item, origem, destino, quantidade,dataHora, usuario="Admin"
     cursor.execute("INSERT INTO historico (data_hora, item, origem, destino, quantidade, usuario) VALUES (?, ?, ?, ?, ?, ?)", (dataHora, item, origem, destino, quantidade, usuario))
     con.commit()
     cursor.close()
-
+    
+def get_transf():
+    cursor = con.cursor
+    
+    cursor.execure("SELECT * FROM historico")
+    lista = [row[0] for row in cursor.fetchall()]
+    return lista
+    
+    
 def get_qtd(conn, item, local):
     cursor = conn.cursor()
     
