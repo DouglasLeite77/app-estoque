@@ -163,7 +163,6 @@ def add_estoque(conn, item, qtd, local):
         cursor.execute("INSERT INTO estoque (id_item, id_local, quantidade) VALUES (?,?,?)", (item,local,qtd))
         
     print(f"Adição de estoque concluída: Item {item} no Local {local} adicionado em {qtd} unidades.")
-    st.success("Item transferido com sucesso")
     
 def remove_estoque(conn, item, qtd, local):
     

@@ -59,6 +59,7 @@ if botao_estoque:
             transacoes_estoque(con,item_input, quantidade_input, origem_input, destino_input)
             nova_linha = list(nova_transacao.values())
             st.session_state.dados.append(nova_transacao)
+            st.success("Item transferido com sucesso")
         
 if st.session_state.dados:
     st.subheader("Dados Atuais")
