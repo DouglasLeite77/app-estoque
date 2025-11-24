@@ -21,7 +21,7 @@ st.markdown(
     """
     <style>
     .main .block-container {
-        max-width: 1000px !important;
+        max-width: 1500px !important;
     }
     div[role="radiogroup"] {
         display: flex !important;
