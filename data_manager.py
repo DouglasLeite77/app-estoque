@@ -9,7 +9,7 @@ import sqlite3
 # %%
 @st.cache_resource
 def conexao_bd():
-    con = sqlite3.connect('estoque.db', check_same_thread=False, isolation_level=None, timeout=30)
+    con = sqlite3.connect('estoque.db', check_same_thread=False, timeout=30)
     
     con.execute('''
                 CREATE TABLE IF NOT EXISTS itens_bd(
