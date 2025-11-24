@@ -32,7 +32,10 @@ st.markdown(
     .stRadio > label {
     justify-content: center;
     width: 100%;
-}
+    }
+    div[data-testid="stMetric"] {
+    margin-bottom: -20px !important;
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -49,8 +52,10 @@ with col1:
         porcentagem = qtd / 1000
         if porcentagem > 1.0:
             porcentagem = 1.0
-        texto_progresso = f"{nome} — {qtd} unidades"
-        st.progress(porcentagem, texto_progresso)
+        defic = qtd - 500
+        st.metric(label=nome, value=qtd, delta=defic,help="Valor aceitavel de 500")
+        st.progress(porcentagem)
+    
         
 
 with col2:
