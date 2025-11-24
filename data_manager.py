@@ -145,6 +145,7 @@ def transacoes_estoque(conn,item, qtd, origem, destino):
 
     if remove_estoque(conn,item, qtd, origem):
         add_estoque(conn,item, qtd, destino)
+        return True
     conn.commit()
 
 def add_estoque(conn, item, qtd, local):
