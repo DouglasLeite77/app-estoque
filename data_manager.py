@@ -2,8 +2,7 @@ import streamlit as st
 from google.oauth2.service_account import Credentials
 import gspread
 import sqlite3
-
-# %%
+import pandas as pd
 
 
 # %%
@@ -70,12 +69,11 @@ def registrar_transf(item, origem, destino, quantidade,dataHora, usuario="Admin"
     con.commit()
     cursor.close()
     
-def get_transf():
-    cursor = con.cursor
+def get_transf(conn):
     
-    cursor.execure("SELECT * FROM historico")
-    lista = [row[0] for row in cursor.fetchall()]
-    return lista
+    query = "SELECT * FROM historico"
+    
+    return pd.read_sql_query(query,conn)
     
     
 def get_qtd(conn, item, local):

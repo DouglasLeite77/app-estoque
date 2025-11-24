@@ -1,6 +1,7 @@
 # Home.py
 
 import streamlit as st
+import pandas as pd
 
 from data_manager import(
     con,
@@ -8,14 +9,26 @@ from data_manager import(
     get_lista_origens,
     get_lista_destinos,
     get_lista_medidas,
-    get_qtd
+    get_qtd,
+    get_transf
+)
+
+st.markdown(
+    """
+    <style>
+    .main .block-container {
+        max-width: 1200px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
 
 st.title("Bem-vindo ao Gerenciamento de Estoque")
 st.subheader("Visão geral sobre o estoque")
 
-col1, col2 = st.columns([1,1])
+col1, col2, col3 = st.columns([0.8,0.2,1])
 lista_itens = get_lista_itens(con)
 lista_locais = get_lista_origens(con)
 with col1:
@@ -28,3 +41,8 @@ with col1:
                 porcentagem = 1.0
             texto_progresso = f"{x} — {qtd} unidades"
             st.progress(porcentagem, texto_progresso)
+            
+with col3:
+    st.subheader("Historico recente de transferencias")
+    lista_transf = get_transf(con)
+    st.dataframe(pd.DataFrame(lista_transf), hide_index=True)
