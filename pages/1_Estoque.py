@@ -20,7 +20,7 @@ from data_manager import (
 st.markdown(
     """
     <style>
-    .main .block-container {
+    .block-container {
         max-width: 1500px !important;
     }
     div[role="radiogroup"] {
