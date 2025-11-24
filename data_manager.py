@@ -72,7 +72,7 @@ def conexao_bd():
     con.commit()
     return con
 
-con = conexao_bd()
+con = sqlite3.connect("dados.db", check_same_thread=False)
 
 # %%
 def get_qtd(conn, item, local):
