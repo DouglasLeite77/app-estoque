@@ -5,7 +5,6 @@ import sqlite3
 
 # %%
 
-    
 
 # %%
 @st.cache_resource
@@ -50,7 +49,7 @@ def conexao_bd():
     con.commit()
     return con
 
-con = sqlite3.connect("dados.db", check_same_thread=False)
+con = sqlite3.connect("estoque.db", check_same_thread=False)
 
 # %%
 def get_qtd(conn, item, local):
