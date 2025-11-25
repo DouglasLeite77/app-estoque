@@ -24,8 +24,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-st.title("Bem-vindo ao Gerenciamento de Estoque")
 st.subheader("Visão geral sobre o estoque")
 
 col1, col2, col3 = st.columns([0.8,0.2,1])
