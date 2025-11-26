@@ -5,8 +5,20 @@ import streamlit as st
 # %%
 st.set_page_config(
     page_title="Registro de transações",
-    page_icon="📦"
 )
+
+st.markdown(
+    """
+    <style>
+    .block-container {
+        max-width: 800px !important;
+        padding-top: 2rem !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 
 from data_manager import (
     con,
