@@ -12,7 +12,7 @@ st.divider()
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.subheader("🎯 Sobre o Projeto")
+    st.subheader("Sobre o Projeto")
     st.write("""
     Este aplicativo foi desenvolvido para simular um sistema real de controle de inventário.
     O objetivo é permitir o gerenciamento eficiente de entradas, saídas e transferências de itens
@@ -26,12 +26,12 @@ with col1:
     """)
 
 with col2:
-    st.subheader("🛠️ Tecnologias")
+    st.subheader("Tecnologias")
     st.write("**Linguagem:** Python 3.10+")
     st.write("**Framework Web:** Streamlit")
     st.write("**Manipulação de Dados:** Pandas")
     st.write("**Banco de Dados:** SQLite3")
-    st.info("💡 Solução Cloud: Implementação de lógica para escrita em *readonly filesystem* usando `/tmp`.")
+    st.info("Solução Cloud: Implementação de lógica para escrita em *readonly filesystem* usando `/tmp`.")
 
 st.divider()
 
