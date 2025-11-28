@@ -70,7 +70,7 @@ with col2:
         if btn:
             add_estoque(con,item,qtd,local)
             st.success("Item adicionado ao estoque")
-            time.sleep(2)
+            time.sleep(1)
             st.rerun()
             
 
@@ -79,7 +79,10 @@ with col2:
         item = st.selectbox(label="Selecione o item", options=lista_itens, key="item_saida")
         qtd = st.number_input("Digite a quantidade", min_value=0, key="qtd_saida")
         med =st.selectbox("Selecione a medida", options=medidas, index=1, key="med_saida")
-        btn = st.button("Adicionar", key="btn_saida")
+        btn = st.button("Remover", key="btn_saida")
         if btn:
             remove_estoque(con,item,qtd,local)
+            st.success("Item removido do estoque")
+            time.sleep(1)
+            st.rerun()
 
